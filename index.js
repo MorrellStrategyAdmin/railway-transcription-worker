@@ -124,7 +124,8 @@ async function processTranscription(jobId, url, callbackUrl) {
     });
 
     const transcript = await assemblyai.transcripts.transcribe({
-      audio: audioPath
+      audio: audioPath,
+      speech_model: 'universal-2'
     });
 
     if (transcript.status === 'error') {
