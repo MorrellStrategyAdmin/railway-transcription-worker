@@ -1,19 +1,25 @@
 FROM node:20-slim
 
-# Install Python, pip, ffmpeg, and other dependencies
+# Install Python, pip, ffmpeg, unzip, and other dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
     ffmpeg \
     curl \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Deno (required by yt-dlp for YouTube extraction)
+RUN curl -fsSL https://deno.land/install.sh | sh
+ENV DENO_INSTALL="/root/.deno"
+ENV PATH="$DENO_INSTALL/bin:$PATH"
 
 # Install yt-dlp using pip with --break-system-packages flag (required for Debian 12+)
 RUN pip3 install --break-system-packages yt-dlp
 
 # Verify installations
-RUN yt-dlp --version && ffmpeg -version
+RUN yt-dlp --version && ffmpeg -version && deno --version
 
 # Set working directory
 WORKDIR /app
