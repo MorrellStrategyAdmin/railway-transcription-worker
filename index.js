@@ -95,8 +95,13 @@ async function processTranscription(jobId, url, callbackUrl) {
     const audioPath = path.join(tempDir, 'audio.mp3');
 
     try {
+      // Use web client and add delays to avoid bot detection
       await execAsync(
-        `yt-dlp -x --audio-format mp3 --audio-quality 0 -o "${path.join(tempDir, 'audio.%(ext)s')}" "${url}"`,
+        `yt-dlp -x --audio-format mp3 --audio-quality 0 ` +
+        `--extractor-args "youtube:player_client=web" ` +
+        `--user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" ` +
+        `--sleep-interval 1 --max-sleep-interval 3 ` +
+        `-o "${path.join(tempDir, 'audio.%(ext)s')}" "${url}"`,
         { timeout: 300000 } // 5 min timeout for download
       );
     } catch (downloadError) {
