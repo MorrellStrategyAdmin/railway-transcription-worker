@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: transcription-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASSEMBLYAI_API_KEY
+        sync: false
+      - key: PORT
+        value: 3001
+    healthCheckPath: /health
